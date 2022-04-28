@@ -58,7 +58,7 @@ fi
 # currently only Pythia
 SAMPLE_TYPE=Pythia
 
-weaver \
+$CMD \
     --data-train \
     "HToBB:${DATADIR}/${SAMPLE_TYPE}/train_100M/HToBB_*.root" \
     "HToCC:${DATADIR}/${SAMPLE_TYPE}/train_100M/HToCC_*.root" \
