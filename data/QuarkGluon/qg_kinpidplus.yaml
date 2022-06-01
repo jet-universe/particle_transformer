@@ -81,6 +81,5 @@ labels:
 observers:
    - jet_pt
    - jet_eta
-   - n_parts
 
 weights:
