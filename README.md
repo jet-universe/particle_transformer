@@ -70,22 +70,22 @@ Additional arguments will be passed directly to the `weaver` command, such as `-
 - using PyTorch's DistributedDataParallel:
 
 ```
-NGPUS=8 ./train_JetClass.sh ParT full --batch-size [batch_size_per_gpu] ...
+DDP_NGPUS=4 ./train_JetClass.sh ParT full --batch-size [batch_size_per_gpu] ...
 ```
 
 **To run the training on the QuarkGluon dataset:**
 
 ```
-./train_QuarkGluon.sh [ParT|ParT-FineTune|PN|PFN|PCNN] [kin|kinpid|kinpidplus] ...
+./train_QuarkGluon.sh [ParT|ParT-FineTune|PN|PN-FineTune|PFN|PCNN] [kin|kinpid|kinpidplus] ...
 ```
 
 **To run the training on the TopLandscape dataset:**
 
 ```
-./train_TopLandscape.sh [ParT|ParT-FineTune|PN|PFN|PCNN] [kin] ...
+./train_TopLandscape.sh [ParT|ParT-FineTune|PN|PN-FineTune|PFN|PCNN] [kin] ...
 ```
 
-The argument `ParT-FineTune` will run the fine-tuning using [models pre-trained on the JetClass dataset](models/).
+The argument `ParT-FineTune` or `PN-FineTune` will run the fine-tuning using [models pre-trained on the JetClass dataset](models/).
 
 ## Citations
 

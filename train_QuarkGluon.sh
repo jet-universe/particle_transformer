@@ -26,6 +26,10 @@ elif [[ "$model" == "ParT-FineTune" ]]; then
 elif [[ "$model" == "PN" ]]; then
     modelopts="networks/example_ParticleNet.py"
     lr="1e-2"
+elif [[ "$model" == "PN-FineTune" ]]; then
+    modelopts="networks/example_ParticleNet_finetune.py"
+    lr="1e-3"
+    extraopts="--optimizer-option lr_mult (\"fc_out.*\",50) --lr-scheduler none"
 elif [[ "$model" == "PFN" ]]; then
     modelopts="networks/example_PFN.py"
     lr="2e-2"
@@ -54,6 +58,9 @@ fi
 
 if [[ "$model" == "ParT-FineTune" ]]; then
     modelopts+=" --load-model-weights models/ParT_${pretrain_type}.pt"
+fi
+if [[ "$model" == "PN-FineTune" ]]; then
+    modelopts+=" --load-model-weights models/ParticleNet_${pretrain_type}.pt"
 fi
 
 weaver \

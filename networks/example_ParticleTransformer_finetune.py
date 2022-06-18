@@ -39,8 +39,6 @@ class ParticleTransformerWrapper(nn.Module):
             output = torch.softmax(output, dim=1)
         return output
 
-        # return self.mod(features, v=lorentz_vectors, mask=mask)[:, [-2, 0]]
-
 
 def get_model(data_config, **kwargs):
 
