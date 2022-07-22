@@ -8,7 +8,7 @@ This repo is the official implementation of "[Particle Transformer for Jet Taggi
 
 ### JetClass dataset
 
-**JetClass** is a new large-scale jet tagging dataset proposed in "[Particle Transformer for Jet Tagging](https://arxiv.org/abs/2202.03772)". It consists of 100M jets for training, 5M for validation and 20M for testing. The dataset contains 10 classes of jets, simulated with [MadGraph](https://launchpad.net/mg5amcnlo) + [Pythia](https://pythia.org/) + [Delphes](https://cp3.irmp.ucl.ac.be/projects/delphes):
+**[JetClass](https://zenodo.org/record/6619768)** is a new large-scale jet tagging dataset proposed in "[Particle Transformer for Jet Tagging](https://arxiv.org/abs/2202.03772)". It consists of 100M jets for training, 5M for validation and 20M for testing. The dataset contains 10 classes of jets, simulated with [MadGraph](https://launchpad.net/mg5amcnlo) + [Pythia](https://pythia.org/) + [Delphes](https://cp3.irmp.ucl.ac.be/projects/delphes):
 
 ![dataset](figures/dataset.png)
 
@@ -92,14 +92,26 @@ The argument `ParT-FineTune` or `PN-FineTune` will run the fine-tuning using [mo
 If you use the Particle Transformer code and/or the JetClass dataset, please cite:
 
 ```
-@article{Qu:2022mxj,
+@InProceedings{Qu:2022mxj,
     author = "Qu, Huilin and Li, Congqiao and Qian, Sitian",
-    title = "{Particle Transformer for Jet Tagging}",
+    title = "{Particle Transformer} for Jet Tagging",
+    booktitle = "{Proceedings of the 39th International Conference on Machine Learning}",
+    pages = "18281--18292",
+    year = "2022",
     eprint = "2202.03772",
     archivePrefix = "arXiv",
-    primaryClass = "hep-ph",
-    month = "2",
-    year = "2022"
+    primaryClass = "hep-ph"
+}
+
+@dataset{JetClass,
+  author       = "Qu, Huilin and Li, Congqiao and Qian, Sitian",
+  title        = "{JetClass}: A Large-Scale Dataset for Deep Learning in Jet Physics",
+  month        = "jun",
+  year         = "2022",
+  publisher    = "Zenodo",
+  version      = "1.0.0",
+  doi          = "10.5281/zenodo.6619768",
+  url          = "https://doi.org/10.5281/zenodo.6619768"
 }
 ```
 
