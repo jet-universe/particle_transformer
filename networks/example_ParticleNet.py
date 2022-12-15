@@ -1,6 +1,11 @@
 import torch
 from weaver.nn.model.ParticleNet import ParticleNet
 
+'''
+Link to the full model implementation:
+https://github.com/hqucms/weaver-core/blob/main/weaver/nn/model/ParticleNet.py
+'''
+
 
 class ParticleNetWrapper(torch.nn.Module):
     def __init__(self, **kwargs) -> None:

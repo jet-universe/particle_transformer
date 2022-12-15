@@ -35,7 +35,7 @@ After download, the dataset paths will be updated in the `env.sh` file.
 The ParT models are implemented in PyTorch and the training is based on the [weaver](https://github.com/hqucms/weaver-core) framework for dataset loading and transformation. To install `weaver`, run:
 
 ```python
-pip install weaver-core
+pip install 'weaver-core>=0.4'
 ```
 
 **To run the training on the JetClass dataset:**

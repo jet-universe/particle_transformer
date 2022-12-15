@@ -1,10 +1,11 @@
-import os
 import torch
+from weaver.nn.model.ParticleTransformer import ParticleTransformer
 from weaver.utils.logger import _logger
-from weaver.utils.import_tools import import_module
 
-ParticleTransformer = import_module(
-    os.path.join(os.path.dirname(__file__), 'ParticleTransformer.py'), 'ParT').ParticleTransformer
+'''
+Link to the full model implementation:
+https://github.com/hqucms/weaver-core/blob/main/weaver/nn/model/ParticleTransformer.py
+'''
 
 
 class ParticleTransformerWrapper(torch.nn.Module):
@@ -27,6 +28,7 @@ def get_model(data_config, **kwargs):
         num_classes=len(data_config.label_value),
         # network configurations
         pair_input_dim=4,
+        use_pre_activation_pair=False,
         embed_dims=[128, 512, 128],
         pair_embed_dims=[64, 64, 64],
         num_heads=8,
