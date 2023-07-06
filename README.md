@@ -4,6 +4,24 @@ This repo is the official implementation of "[Particle Transformer for Jet Taggi
 
 ![jet-tagging](figures/jet-tagging.png)
 
+## Updates
+
+### 2023/07/06
+
+We added a [helper function](dataloader.py) to read the JetClass dataset into regular numpy arrays. To use it, simply download the file [dataloader.py](dataloader.py) and do:
+
+```python
+from dataloader import read_file
+
+x_particles, x_jet, y = read_file(filepath)
+```
+
+The return values are:
+
+- `x_particles`: a zero-padded numpy array of particle-level features in the shape `(num_jets, num_particle_features, max_num_particles)`.
+- `x_jets`: a numpy array of jet-level features in the shape `(num_jets, num_jet_features)`.
+- `y`: a one-hot encoded numpy array of the truth lables in the shape `(num_jets, num_classes)`.
+
 ## Introduction
 
 ### JetClass dataset
