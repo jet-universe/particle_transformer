@@ -133,7 +133,7 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser('Convert qg benchmark datasets')
     parser.add_argument('-i', '--inputdir', required=True, help='Directory of input numpy files.')
     parser.add_argument('-o', '--outputdir', required=True, help='Output directory.')
-    parser.add_argument('--train-test-split', default=0.9, help='Training / testing split fraction.')
+    parser.add_argument('--train-test-split', type=float, default=0.9, help='Training / testing split fraction.')
     args = parser.parse_args()
 
     import glob
