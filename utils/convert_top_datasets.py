@@ -1,8 +1,6 @@
 import os
 import pandas as pd
 import numpy as np
-import awkward0
-from uproot3_methods import TLorentzVectorArray
 import awkward as ak
 import argparse
 
@@ -14,7 +12,19 @@ Datasets introduction:
 
 Download:
   - https://zenodo.org/record/2603256
+
+Versions:
+ - awkward==2.6.4
+ - vector==1.4.0
+ - pandas==2.2.2
+ - tables==3.9.2
 '''
+
+
+def _p4_from_pxpypze(px, py, pz, energy):
+    import vector
+    vector.register_awkward()
+    return vector.zip({'px': px, 'py': py, 'pz': pz, 'energy': energy})
 
 
 def _transform(dataframe, start=0, stop=-1):
@@ -32,14 +42,14 @@ def _transform(dataframe, start=0, stop=-1):
     mask = _e > 0
     n_particles = np.sum(mask, axis=1)
 
-    px = awkward0.JaggedArray.fromcounts(n_particles, _px[mask])
-    py = awkward0.JaggedArray.fromcounts(n_particles, _py[mask])
-    pz = awkward0.JaggedArray.fromcounts(n_particles, _pz[mask])
-    energy = awkward0.JaggedArray.fromcounts(n_particles, _e[mask])
+    px = ak.unflatten(_px[mask], n_particles)
+    py = ak.unflatten(_py[mask], n_particles)
+    pz = ak.unflatten(_pz[mask], n_particles)
+    energy = ak.unflatten(_e[mask], n_particles)
 
-    p4 = TLorentzVectorArray.from_cartesian(px, py, pz, energy)
+    p4 = _p4_from_pxpypze(px, py, pz, energy)
 
-    jet_p4 = p4.sum()
+    jet_p4 = ak.sum(p4, axis=1)
 
     # outputs
     v = {}
@@ -57,10 +67,10 @@ def _transform(dataframe, start=0, stop=-1):
     v['part_pz'] = pz
     v['part_energy'] = energy
 
-    _jet_etasign = np.sign(v['jet_eta'])
+    _jet_etasign = ak.to_numpy(np.sign(v['jet_eta']))
     _jet_etasign[_jet_etasign == 0] = 1
     v['part_deta'] = (p4.eta - v['jet_eta']) * _jet_etasign
-    v['part_dphi'] = p4.delta_phi(jet_p4)
+    v['part_dphi'] = p4.deltaphi(jet_p4)
 
     return v
 
@@ -75,7 +85,7 @@ def convert(source, destdir, basename):
     if os.path.exists(output):
         os.remove(output)
     v = _transform(df)
-    arr = ak.Array({k: ak.from_awkward0(a) for k, a in v.items()})
+    arr = ak.Array(v)
     ak.to_parquet(arr, output, compression='LZ4', compression_level=4)
 
 

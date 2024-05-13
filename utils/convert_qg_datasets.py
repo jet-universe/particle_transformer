@@ -1,7 +1,5 @@
 import os
 import numpy as np
-import awkward0
-from uproot3_methods import TLorentzVectorArray
 import awkward as ak
 import argparse
 
@@ -16,7 +14,17 @@ Download:
 
 - Herwig7.1 Quark and Gluon Jets:
   - https://zenodo.org/record/3066475
+
+Versions:
+ - awkward==2.6.4
+ - vector==1.4.0
 '''
+
+
+def _p4_from_ptetaphim(pt, eta, phi, mass):
+    import vector
+    vector.register_awkward()
+    return vector.zip({'pt': pt, 'eta': eta, 'phi': phi, 'mass': mass})
 
 
 def _transform(X, y, start=0, stop=-1):
@@ -37,19 +45,19 @@ def _transform(X, y, start=0, stop=-1):
     mask = _pt > 0
     n_particles = np.sum(mask, axis=1)
 
-    pt = awkward0.JaggedArray.fromcounts(n_particles, _pt[mask])
-    eta = awkward0.JaggedArray.fromcounts(n_particles, _eta[mask])
-    phi = awkward0.JaggedArray.fromcounts(n_particles, _phi[mask])
-    mass = awkward0.JaggedArray.zeros_like(pt)
-    PID = awkward0.JaggedArray.fromcounts(n_particles, _pid[mask])
+    pt = ak.unflatten(_pt[mask], n_particles)
+    eta = ak.unflatten(_eta[mask], n_particles)
+    phi = ak.unflatten(_phi[mask], n_particles)
+    mass = ak.zeros_like(pt)
+    PID = ak.unflatten(_pid[mask], n_particles)
 
-    p4 = TLorentzVectorArray.from_ptetaphim(pt, eta, phi, mass)
+    p4 = _p4_from_ptetaphim(pt, eta, phi, mass)
     px = p4.x
     py = p4.y
     pz = p4.z
     energy = p4.energy
 
-    jet_p4 = p4.sum()
+    jet_p4 = ak.sum(p4, axis=1)
 
     # outputs
     v = {}
@@ -67,20 +75,20 @@ def _transform(X, y, start=0, stop=-1):
     v['part_pz'] = pz
     v['part_energy'] = energy
 
-    _jet_etasign = np.sign(v['jet_eta'])
+    _jet_etasign = ak.to_numpy(np.sign(v['jet_eta']))
     _jet_etasign[_jet_etasign == 0] = 1
     v['part_deta'] = (p4.eta - v['jet_eta']) * _jet_etasign
-    v['part_dphi'] = p4.delta_phi(jet_p4)
+    v['part_dphi'] = p4.deltaphi(jet_p4)
 
     v['part_pid'] = PID
-    v['part_isCHPlus'] = ((PID == 211) + (PID == 321) + (PID == 2212)).astype(np.float32)
-    v['part_isCHMinus'] = ((PID == -211) + (PID == -321) + (PID == -2212)).astype(np.float32)
-    v['part_isNeutralHadron'] = ((PID == 130) + (PID == 2112) + (PID == -2112)).astype(np.float32)
-    v['part_isPhoton'] = (PID == 22).astype(np.float32)
-    v['part_isEPlus'] = (PID == -11).astype(np.float32)
-    v['part_isEMinus'] = (PID == 11).astype(np.float32)
-    v['part_isMuPlus'] = (PID == -13).astype(np.float32)
-    v['part_isMuMinus'] = (PID == 13).astype(np.float32)
+    v['part_isCHPlus'] = ak.values_astype((PID == 211) + (PID == 321) + (PID == 2212), 'float32')
+    v['part_isCHMinus'] = ak.values_astype((PID == -211) + (PID == -321) + (PID == -2212), 'float32')
+    v['part_isNeutralHadron'] = ak.values_astype((PID == 130) + (PID == 2112) + (PID == -2112), 'float32')
+    v['part_isPhoton'] = ak.values_astype(PID == 22, 'float32')
+    v['part_isEPlus'] = ak.values_astype(PID == -11, 'float32')
+    v['part_isEMinus'] = ak.values_astype(PID == 11, 'float32')
+    v['part_isMuPlus'] = ak.values_astype(PID == -13, 'float32')
+    v['part_isMuMinus'] = ak.values_astype(PID == 13, 'float32')
 
     v['part_isChargedHadron'] = v['part_isCHPlus'] + v['part_isCHMinus']
     v['part_isElectron'] = v['part_isEPlus'] + v['part_isEMinus']
@@ -109,7 +117,7 @@ def convert(sources, destdir, basename):
         if os.path.exists(output):
             os.remove(output)
         v = _transform(npfile['X'], npfile['y'])
-        arr = ak.Array({k: ak.from_awkward0(a) for k, a in v.items()})
+        arr = ak.Array(v)
         ak.to_parquet(arr, output, compression='LZ4', compression_level=4)
 
 
