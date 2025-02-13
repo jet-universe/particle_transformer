@@ -12,7 +12,7 @@ DATADIR=${DATADIR_TopLandscape}
 # set a comment via `COMMENT`
 suffix=${COMMENT}
 
-# PN, PFN, PCNN, ParT
+# PN, PFN, PCNN, ParT, LGATr
 model=$1
 extraopts=""
 if [[ "$model" == "ParT" ]]; then
@@ -37,6 +37,9 @@ elif [[ "$model" == "PCNN" ]]; then
     modelopts="networks/example_PCNN.py"
     lr="2e-2"
     extraopts="--batch-size 4096"
+elif [[ "$model" == "LGATr" ]]; then
+    modelopts="networks/example_LGATr.py --use-amp --optimizer-option weight_decay 0.01"
+    lr="1e-3"
 else
     echo "Invalid model $model!"
     exit 1
