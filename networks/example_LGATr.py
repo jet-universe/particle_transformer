@@ -24,11 +24,18 @@ def get_model(data_config, **kwargs):
     cfg = dict(
         in_s_channels=len(data_config.input_dicts["pf_features"]),
         num_classes=len(data_config.label_value),
+        # symmetry-breaking configurations
+        spurion_token=True,
+        beam_reference="xyplane",
+        add_time_reference=True,
+        two_beams=True,
         # network configurations
         hidden_mv_channels=16,
         hidden_s_channels=32,
         num_blocks=12,
         num_heads=8,
+        double_layernorm=True,
+        head_scale=True,
     )
 
     cfg.update(**kwargs)
