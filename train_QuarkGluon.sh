@@ -13,7 +13,7 @@ DATADIR=${DATADIR_QuarkGluon}
 # set a comment via `COMMENT`
 suffix=${COMMENT}
 
-# PN, PFN, PCNN, ParT
+# PN, PFN, PCNN, ParT, LGATr
 model=$1
 extraopts=""
 if [[ "$model" == "ParT" ]]; then
@@ -41,6 +41,9 @@ elif [[ "$model" == "PCNN" ]]; then
 else
     echo "Invalid model $model!"
     exit 1
+elif [[ "$model" == "LGATr" ]]; then
+    modelopts="networks/example_LGATr.py --use-amp --optimizer-option weight_decay 0.01"
+    lr="1e-3"
 fi
 
 # "kin", "kinpid", "kinpidplus"
