@@ -20,6 +20,11 @@ class LGATrTaggerWrapper(torch.nn.Module):
 
 
 def get_model(data_config, **kwargs):
+    use_fully_connected_subgroup = False
+    if not use_fully_connected_subgroup:
+        import weaver.nn.model.gatr.primitives.linear
+
+        weaver.nn.model.gatr.primitives.linear.USE_FULLY_CONNECTED_SUBGROUP = False
 
     cfg = dict(
         in_s_channels=len(data_config.input_dicts["pf_features"]),
