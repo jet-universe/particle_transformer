@@ -41,6 +41,7 @@ def get_model(data_config, **kwargs):
         num_heads=8,
         double_layernorm=True,
         head_scale=True,
+        checkpoint_blocks=False,
     )
 
     cfg.update(**kwargs)
