@@ -38,7 +38,7 @@ elif [[ "$model" == "PCNN" ]]; then
     lr="2e-2"
     extraopts="--batch-size 4096"
 elif [[ "$model" == "LGATr" ]]; then
-    modelopts="networks/example_LGATr.py --use-amp --optimizer-option weight_decay 0.01"
+    modelopts="networks/example_LGATr.py --optimizer-option weight_decay 0.01"
     lr="1e-3"
 else
     echo "Invalid model $model!"
