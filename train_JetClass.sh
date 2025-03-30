@@ -41,12 +41,12 @@ elif [[ "$model" == "PFN" ]]; then
 elif [[ "$model" == "PCNN" ]]; then
     modelopts="networks/example_PCNN.py"
     batchopts="--batch-size 4096 --start-lr 2e-2"
+elif [[ "$model" == "LGATr" ]]; then
+    modelopts="networks/example_LGATr.py"
+    batchopts="--batch-size 512 --start-lr 3e-4 --optimizer lion"
 else
     echo "Invalid model $model!"
     exit 1
-elif [[ "$model" == "LGATr" ]]; then
-    modelopts="networks/example_LGATr.py --use-amp"
-    batchopts="--batch-size 512 --start-lr 1e-3"
 fi
 
 # "kin", "kinpid", "full"

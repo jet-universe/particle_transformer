@@ -38,12 +38,12 @@ elif [[ "$model" == "PCNN" ]]; then
     modelopts="networks/example_PCNN.py"
     lr="2e-2"
     extraopts="--batch-size 4096"
+elif [[ "$model" == "LGATr" ]]; then
+    modelopts="networks/example_LGATr.py --batch-size 128 --optimizer lion --optimizer-option weight_decay 0.2"
+    lr="3e-4"
 else
     echo "Invalid model $model!"
     exit 1
-elif [[ "$model" == "LGATr" ]]; then
-    modelopts="networks/example_LGATr.py --use-amp --optimizer-option weight_decay 0.01"
-    lr="1e-3"
 fi
 
 # "kin", "kinpid", "kinpidplus"
@@ -69,10 +69,10 @@ fi
 weaver \
     --data-train "${DATADIR}/train_file_*.parquet" \
     --data-test "${DATADIR}/test_file_*.parquet" \
-    --data-config data/QuarkGluon/qg_${FEATURE_TYPE}.yaml --network-config $modelopts \
+    --data-config data/QuarkGluon/qg_${FEATURE_TYPE}.yaml \
     --model-prefix training/QuarkGluon/${model}/{auto}${suffix}/net \
     --num-workers 1 --fetch-step 1 --in-memory --train-val-split 0.8889 \
     --batch-size 512 --samples-per-epoch 1600000 --samples-per-epoch-val 200000 --num-epochs 20 --gpus 0 \
     --start-lr $lr --optimizer ranger --log logs/QuarkGluon_${model}_{auto}${suffix}.log --predict-output pred.root \
     --tensorboard QuarkGluon_${FEATURE_TYPE}_${model}${suffix} \
-    ${extraopts} "${@:3}"
+     --network-config $modelopts ${extraopts} "${@:3}"
