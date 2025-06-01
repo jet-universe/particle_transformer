@@ -12,7 +12,7 @@ DATADIR=${DATADIR_TopLandscape}
 # set a comment via `COMMENT`
 suffix=${COMMENT}
 
-# PN, PFN, PCNN, ParT
+# PN, PFN, PCNN, ParT, LGATr
 model=$1
 extraopts=""
 if [[ "$model" == "ParT" ]]; then
@@ -37,6 +37,9 @@ elif [[ "$model" == "PCNN" ]]; then
     modelopts="networks/example_PCNN.py"
     lr="2e-2"
     extraopts="--batch-size 4096"
+elif [[ "$model" == "LGATr" ]]; then
+    modelopts="networks/example_LGATr.py --batch-size 128 --optimizer lion --optimizer-option weight_decay 0.2"
+    lr="3e-4"
 else
     echo "Invalid model $model!"
     exit 1
@@ -54,10 +57,10 @@ weaver \
     --data-train "${DATADIR}/train_file.parquet" \
     --data-val "${DATADIR}/val_file.parquet" \
     --data-test "${DATADIR}/test_file.parquet" \
-    --data-config data/TopLandscape/top_${FEATURE_TYPE}.yaml --network-config $modelopts \
+    --data-config data/TopLandscape/top_${FEATURE_TYPE}.yaml \
     --model-prefix training/TopLandscape/${model}/{auto}${suffix}/net \
     --num-workers 1 --fetch-step 1 --in-memory \
     --batch-size 512 --samples-per-epoch $((2400 * 512)) --samples-per-epoch-val $((800 * 512)) --num-epochs 20 --gpus 0 \
     --start-lr $lr --optimizer ranger --log logs/TopLandscape_${model}_{auto}${suffix}.log --predict-output pred.root \
     --tensorboard TopLandscape_${FEATURE_TYPE}_${model}${suffix} \
-    ${extraopts} "${@:3}"
+    --network-config $modelopts ${extraopts} "${@:3}"

@@ -27,7 +27,7 @@ samples_per_epoch=$((10000 * 1024 / $NGPUS))
 samples_per_epoch_val=$((10000 * 128))
 dataopts="--num-workers 2 --fetch-step 0.01"
 
-# PN, PFN, PCNN, ParT
+# PN, PFN, PCNN, ParT, LGATr
 model=$1
 if [[ "$model" == "ParT" ]]; then
     modelopts="networks/example_ParticleTransformer.py --use-amp"
@@ -41,6 +41,9 @@ elif [[ "$model" == "PFN" ]]; then
 elif [[ "$model" == "PCNN" ]]; then
     modelopts="networks/example_PCNN.py"
     batchopts="--batch-size 4096 --start-lr 2e-2"
+elif [[ "$model" == "LGATr" ]]; then
+    modelopts="networks/example_LGATr.py"
+    batchopts="--batch-size 512 --start-lr 3e-4 --optimizer lion"
 else
     echo "Invalid model $model!"
     exit 1
