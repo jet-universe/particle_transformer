@@ -35,7 +35,6 @@ def get_model(data_config, **kwargs):
         hidden_s_channels=32,
         num_blocks=12,
         num_heads=8,
-        double_layernorm=True,
         head_scale=True,
         checkpoint_blocks=False,
         # gatr configurations
